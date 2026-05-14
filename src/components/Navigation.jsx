@@ -20,6 +20,7 @@ export default function Navigation() {
       gridTemplateColumns: 'repeat(5, 1fr)',
       height: 'var(--nav-height)',
       zIndex: 500,
+      padding: '0 12px',
       paddingBottom: 'env(safe-area-inset-bottom)',
     }}>
       {NAV_ITEMS.map(({ to, label, icon: Icon, activeIcon: ActiveIcon }) => (

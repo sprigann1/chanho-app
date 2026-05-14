@@ -190,16 +190,16 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
-        <div className="sync-bar">
-          <div className={`sync-dot ${syncStatus === 'error' ? 'error' : syncStatus === 'loading' ? 'loading' : ''}`} />
-          <span>
-            {syncStatus === 'ok' && lastSync
-              ? `동기화 완료 · ${lastSync.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}`
-              : syncStatus === 'error'   ? '오프라인 모드 (로컬 데이터 사용 중)'
-              : syncStatus === 'loading' ? '동기화 중...'
-              : '대기 중'}
-          </span>
-        </div>
+        {(syncStatus === 'ok' || syncStatus === 'loading') && (
+          <div className="sync-bar">
+            <div className={`sync-dot ${syncStatus === 'loading' ? 'loading' : ''}`} />
+            <span style={{ color: 'var(--text-4)', fontSize: 11 }}>
+              {syncStatus === 'ok' && lastSync
+                ? `${lastSync.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })} 동기화`
+                : '동기화 중...'}
+            </span>
+          </div>
+        )}
       </div>
 
       {loading ? <div className="spinner" /> : (
