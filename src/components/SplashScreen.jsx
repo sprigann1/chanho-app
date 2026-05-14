@@ -19,7 +19,7 @@ export default function SplashScreen({ onRemove }) {
     <div
       style={{
         position: 'fixed', inset: 0, zIndex: 9999,
-        background: '#3182F6',
+        background: '#2D2D2D',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         opacity: hiding ? 0 : 1,
@@ -27,18 +27,20 @@ export default function SplashScreen({ onRemove }) {
       }}
       onTransitionEnd={handleTransitionEnd}
     >
-      <svg width="110" height="110" viewBox="0 0 512 512">
-        <polygon points="256,96 408,224 408,416 104,416 104,224" fill="white"/>
-        <rect x="144" y="252" width="88" height="80" rx="8" fill="#3182F6"/>
-        <rect x="280" y="252" width="88" height="80" rx="8" fill="#3182F6"/>
-        <rect x="208" y="332" width="96" height="84" rx="8" fill="#3182F6"/>
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+        <rect x="2" y="2" width="76" height="76" rx="3" stroke="white" strokeWidth="2"/>
+        <line x1="40" y1="2" x2="40" y2="78" stroke="white" strokeWidth="2"/>
+        <line x1="2" y1="40" x2="78" y2="40" stroke="white" strokeWidth="2"/>
       </svg>
       <div style={{
-        color: '#fff', fontSize: 22, fontWeight: 700,
-        marginTop: 20, letterSpacing: '-0.5px',
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 300,
+        letterSpacing: '0.2em',
+        marginTop: 16,
         fontFamily: "'Pretendard', -apple-system, sans-serif",
       }}>
-        창호 영업관리
+        보운창호
       </div>
     </div>
   );
