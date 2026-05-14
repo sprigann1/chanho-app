@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
 import SwipeableItem from '../components/SwipeableItem';
+import ThemeToggle from '../components/ThemeToggle';
 import { fmtDateTime } from '../utils/date';
 
 // ─── Add Todo Modal ───────────────────────────────────────────────────────────
@@ -134,10 +135,10 @@ function TodoRow({ todo, onToggle, onEdit, isDone }) {
         {isDone && '✓'}
       </button>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-3)', textDecoration: isDone ? 'line-through' : 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <div style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-3)', textDecoration: isDone ? 'line-through' : 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {todo.content}
         </div>
-        <div style={{ fontSize: 12, marginTop: 2, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        <div style={{ fontSize: 14, marginTop: 2, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{todo.companyName}</span>
           <span style={{ color: 'var(--text-4)' }}>·</span>
           <span style={{ color: 'var(--text-3)' }}>{todo.siteName}</span>
@@ -172,9 +173,12 @@ export default function Todos() {
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div className="page-title">할 일</div>
-          <span style={{ fontSize: 13, color: incompleteTodos.length > 0 ? 'var(--purple)' : 'var(--green)', fontWeight: 600 }}>
-            {incompleteTodos.length > 0 ? `${incompleteTodos.length}개 남음` : '모두 완료 🎉'}
-          </span>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <ThemeToggle />
+            <span style={{ fontSize: 14, color: incompleteTodos.length > 0 ? 'var(--purple)' : 'var(--green)', fontWeight: 600 }}>
+              {incompleteTodos.length > 0 ? `${incompleteTodos.length}개 남음` : '모두 완료 🎉'}
+            </span>
+          </div>
         </div>
       </div>
 

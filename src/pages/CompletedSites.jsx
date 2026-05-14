@@ -1,5 +1,6 @@
 import React from 'react';
 import { useData } from '../context/DataContext';
+import ThemeToggle from '../components/ThemeToggle';
 
 function formatDate(str) {
   if (!str) return '-';
@@ -33,9 +34,12 @@ export default function CompletedSites() {
   return (
     <div className="page">
       <div className="page-header">
-        <div className="page-title">완료 현장</div>
-        <div style={{ fontSize: 13, color: 'var(--text-3)', marginTop: 4 }}>
-          총 {completedSites.length}건
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div className="page-title">완료 현장</div>
+            <div style={{ fontSize: 14, color: 'var(--text-3)', marginTop: 2 }}>총 {completedSites.length}건</div>
+          </div>
+          <ThemeToggle />
         </div>
       </div>
 
@@ -49,7 +53,7 @@ export default function CompletedSites() {
           {grouped.map((group, gi) => (
             <div key={group.id} style={{ marginBottom: 20 }}>
               <div style={{
-                fontSize: 17, fontWeight: 800, color: '#000',
+                fontSize: 18, fontWeight: 800, color: 'var(--text-1)',
                 paddingBottom: 8,
                 borderBottom: '2px solid var(--border)',
                 marginBottom: 8,
@@ -80,13 +84,13 @@ export default function CompletedSites() {
                   </button>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
-                      fontSize: 14, fontWeight: 600, color: 'var(--text-3)',
+                      fontSize: 16, fontWeight: 600, color: 'var(--text-3)',
                       textDecoration: 'line-through',
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                     }}>
                       {site.siteName}
                     </div>
-                    <div style={{ fontSize: 12, color: 'var(--text-4)', marginTop: 2 }}>
+                    <div style={{ fontSize: 14, color: 'var(--text-4)', marginTop: 2 }}>
                       {site.measureDate && `실측 ${formatDate(site.measureDate)}`}
                       {site.measureDate && site.constructDate && ' · '}
                       {site.constructDate && `시공 ${formatDate(site.constructDate)}`}

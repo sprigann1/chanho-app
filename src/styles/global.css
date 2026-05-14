@@ -20,6 +20,7 @@
   --bg: #F2F4F6;
   --surface: #FFFFFF;
   --border: #E5E8EB;
+  --overlay-bg: rgba(0, 0, 0, 0.5);
 
   --text-1: #191F28;
   --text-2: #4E5968;
@@ -38,6 +39,47 @@
 
   --nav-height: 64px;
   --header-height: 56px;
+}
+
+[data-theme="dark"] {
+  --primary:       #4f7cff;
+  --primary-light: #1a2340;
+  --primary-dark:  #3a5fd0;
+
+  --green:         #00d47e;
+  --green-light:   #0d2218;
+
+  --orange:        #ff9f0a;
+  --orange-light:  #231800;
+
+  --red:           #ff5249;
+  --red-light:     #2a1518;
+
+  --purple:        #a78bfa;
+  --purple-light:  #1e1040;
+
+  --bg:            #0f1117;
+  --surface:       #1a1d26;
+  --border:        #2e3350;
+  --overlay-bg:    rgba(0, 0, 0, 0.72);
+
+  --text-1:        #e8eaf6;
+  --text-2:        #b0b8d4;
+  --text-3:        #7b85a4;
+  --text-4:        #4a5278;
+
+  --shadow-sm:     0 1px 4px rgba(0, 0, 0, 0.4);
+  --shadow:        0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md:     0 4px 16px rgba(0, 0, 0, 0.6);
+  --shadow-lg:     0 8px 32px rgba(0, 0, 0, 0.7);
+}
+
+/* Smooth theme transition — active only during toggle */
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition: background-color 0.25s ease, color 0.25s ease,
+              border-color 0.25s ease, fill 0.25s ease !important;
 }
 
 *, *::before, *::after {
@@ -144,8 +186,8 @@ a {
 }
 
 .section-title {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
   color: var(--text-2);
   margin-bottom: 12px;
   display: flex;
@@ -174,7 +216,7 @@ a {
 }
 
 .stat-label {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-3);
   margin-bottom: 6px;
 }
@@ -228,7 +270,7 @@ a {
 }
 
 .event-name {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-1);
   white-space: nowrap;
@@ -237,7 +279,7 @@ a {
 }
 
 .event-company {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-3);
   margin-top: 2px;
 }
@@ -421,7 +463,7 @@ select.form-input {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay-bg);
   z-index: 1000;
   display: flex;
   align-items: flex-end;
@@ -430,8 +472,6 @@ select.form-input {
 
 .modal-sheet {
   width: 100%;
-  max-width: 480px;
-  margin: 0 auto;
   background: var(--surface);
   border-radius: 20px 20px 0 0;
   max-height: 90dvh;
@@ -510,21 +550,10 @@ select.form-input {
   color: #fff;
 }
 
-.tab-chip.active.measure {
-  background: var(--green);
-}
-
-.tab-chip.active.construct {
-  background: var(--primary);
-}
-
-.tab-chip.active.collect {
-  background: var(--orange);
-}
-
-.tab-chip.active.todo {
-  background: var(--purple);
-}
+.tab-chip.active.measure { background: var(--green); }
+.tab-chip.active.construct { background: var(--primary); }
+.tab-chip.active.collect { background: var(--orange); }
+.tab-chip.active.todo { background: var(--purple); }
 
 /* Progress bar */
 .progress-bar {
@@ -572,7 +601,7 @@ select.form-input {
 }
 
 .empty-text {
-  font-size: 15px;
+  font-size: 16px;
   color: var(--text-3);
   line-height: 1.6;
 }
@@ -653,13 +682,13 @@ select.form-input {
 }
 
 .company-name {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
   color: var(--text-1);
 }
 
 .company-meta {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-3);
   margin-top: 2px;
 }
@@ -710,7 +739,7 @@ select.form-input {
 }
 
 .site-name {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-1);
   white-space: nowrap;
@@ -719,7 +748,7 @@ select.form-input {
 }
 
 .site-dates {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-3);
   margin-top: 3px;
 }
@@ -896,7 +925,7 @@ select.form-input {
 }
 
 .collection-label {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-3);
   font-weight: 500;
   margin-bottom: 6px;
@@ -932,13 +961,13 @@ select.form-input {
 }
 
 .company-collection-name {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-1);
 }
 
 .company-collection-rate {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--primary);
 }
@@ -946,7 +975,7 @@ select.form-input {
 .company-collection-amounts {
   display: flex;
   gap: 12px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-3);
   margin-bottom: 8px;
 }
@@ -990,7 +1019,7 @@ select.form-input {
   left: 50%;
   transform: translateX(-50%);
   background: var(--text-1);
-  color: #fff;
+  color: var(--bg);
   padding: 10px 20px;
   border-radius: 20px;
   font-size: 14px;

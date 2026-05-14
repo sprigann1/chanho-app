@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
+import ThemeToggle from '../components/ThemeToggle';
 
 const STATUS_OPTIONS = ['대기', '진행중', '완료', '취소'];
 const STATUS_CLASS = { '대기': 'status-waiting', '진행중': 'status-progress', '완료': 'status-done', '취소': 'status-cancel' };
@@ -288,14 +289,14 @@ function TodoSection({ siteId, siteName, todos, onAdd, onToggle, onDelete }) {
                 </button>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{
-                    fontSize: 14, fontWeight: 500, color: 'var(--text-3)',
+                    fontSize: 16, fontWeight: 500, color: 'var(--text-3)',
                     textDecoration: todo.completed === 'true' ? 'line-through' : 'none',
                     overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                   }}>
                     {todo.content}
                   </div>
                   {(todo.dueDate || todo.dueTime) && (
-                    <div style={{ fontSize: 12, color: isOverdue ? 'var(--red)' : 'var(--text-4)', marginTop: 2, fontWeight: isOverdue ? 600 : 400 }}>
+                    <div style={{ fontSize: 14, color: isOverdue ? 'var(--red)' : 'var(--text-4)', marginTop: 2, fontWeight: isOverdue ? 600 : 400 }}>
                       {isOverdue && '⚠ '}{formatKorTodoDate(todo.dueDate, todo.dueTime)}
                     </div>
                   )}
@@ -463,7 +464,10 @@ export default function Companies() {
   return (
     <div className="page">
       <div className="page-header">
-        <div className="page-title">업체 관리</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div className="page-title">업체 관리</div>
+          <ThemeToggle />
+        </div>
         <div style={{ marginTop: 12 }}>
           <div className="search-box">
             <span className="search-icon">🔍</span>

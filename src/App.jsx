@@ -1,5 +1,6 @@
 import React from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext';
 import { DataProvider, useData } from './context/DataContext';
 import Navigation from './components/Navigation';
 import Dashboard from './pages/Dashboard';
@@ -29,9 +30,11 @@ function AppContent() {
 export default function App() {
   return (
     <HashRouter>
-      <DataProvider>
-        <AppContent />
-      </DataProvider>
+      <ThemeProvider>
+        <DataProvider>
+          <AppContent />
+        </DataProvider>
+      </ThemeProvider>
     </HashRouter>
   );
 }

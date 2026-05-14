@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
-import { sheetsApi, MOCK_SITES, MOCK_COMPANIES } from '../api/sheets';
+import { sheetsApi } from '../api/sheets';
 
 const DataContext = createContext(null);
 
@@ -127,23 +127,19 @@ export function DataProvider({ children }) {
     }
   }, []);
 
-  // On mount: load cache instantly → background sync + flush retry queue
+  // On mount: load cache → sync from GAS (show spinner only when no cache)
   useEffect(() => {
     const cache = readCache();
     const hasCache = !!(cache?.sites?.length);
     if (hasCache) {
       snap.current = {
         sites:     cache.sites,
-        companies: cache.companies || MOCK_COMPANIES,
+        companies: cache.companies || [],
         todos:     cache.todos     || [],
       };
       setSites(snap.current.sites);
       setCompanies(snap.current.companies);
       setTodos(snap.current.todos);
-    } else {
-      snap.current = { sites: MOCK_SITES, companies: MOCK_COMPANIES, todos: [] };
-      setSites(MOCK_SITES);
-      setCompanies(MOCK_COMPANIES);
     }
     runSync(!hasCache);
     flushRetryQueue();

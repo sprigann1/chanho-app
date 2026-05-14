@@ -12,9 +12,9 @@ const NAV_ITEMS = [
 export default function Navigation() {
   return (
     <nav style={{
-      position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
-      width: '100%', maxWidth: 480,
-      background: '#fff',
+      position: 'fixed', bottom: 0, left: 0,
+      width: '100%',
+      background: 'var(--surface)',
       borderTop: '1px solid var(--border)',
       display: 'grid',
       gridTemplateColumns: 'repeat(5, 1fr)',
@@ -31,7 +31,7 @@ export default function Navigation() {
             display: 'flex', flexDirection: 'column', alignItems: 'center',
             justifyContent: 'center', gap: 3,
             color: isActive ? 'var(--primary)' : 'var(--text-4)',
-            fontSize: 10, fontWeight: 600,
+            fontSize: 12, fontWeight: 600,
             textDecoration: 'none',
             transition: 'color 0.15s',
             paddingTop: 8,

@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useData } from '../context/DataContext';
+import ThemeToggle from '../components/ThemeToggle';
 import { fmtDate } from '../utils/date';
 import { StatusBadge, isCompletedSite } from './Sites';
 
@@ -109,7 +110,10 @@ export default function Collections() {
   return (
     <div className="page">
       <div className="page-header">
-        <div className="page-title">수금 현황</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div className="page-title">수금 현황</div>
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Summary cards */}
@@ -211,9 +215,9 @@ export default function Collections() {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4, flexWrap: 'wrap' }}>
                     {s.isOverdue && <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 6px', background: 'var(--red-light)', color: 'var(--red)', borderRadius: 4 }}>연체</span>}
-                    <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-1)' }}>{s.siteName}</span>
+                    <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-1)' }}>{s.siteName}</span>
                   </div>
-                  <div style={{ fontSize: 12, color: 'var(--text-3)' }}>
+                  <div style={{ fontSize: 14, color: 'var(--text-3)' }}>
                     {s.companyName}
                     {s.collectDate && ` · 수금예정 ${fmtDate(s.collectDate)}`}
                   </div>

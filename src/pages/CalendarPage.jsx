@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
+import ThemeToggle from '../components/ThemeToggle';
 import { fmtDateTime } from '../utils/date';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
@@ -94,7 +95,10 @@ export default function CalendarPage() {
   return (
     <div className="page">
       <div className="page-header">
-        <div className="page-title">일정 달력</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div className="page-title">일정 달력</div>
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Type filter tabs */}
@@ -193,9 +197,9 @@ export default function CalendarPage() {
               background: 'var(--surface)', borderRadius: 'var(--radius)', padding: '12px 8px',
               boxShadow: 'var(--shadow-sm)', textAlign: 'center',
             }}>
-              <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 6, color }}>{label}</div>
-              <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)' }}>
-                {count}<span style={{ fontSize: 11, color: 'var(--text-3)', marginLeft: 2 }}>건</span>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6, color }}>{label}</div>
+              <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-1)', lineHeight: 1 }}>
+                {count}<span style={{ fontSize: 13, color: 'var(--text-3)', marginLeft: 2 }}>건</span>
               </div>
             </div>
           ))}
@@ -226,10 +230,10 @@ function SiteEventRow({ event }) {
         {label}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {event.siteName}
         </div>
-        <div style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 2 }}>{event.companyName}</div>
+        <div style={{ fontSize: 14, color: 'var(--text-3)', marginTop: 2 }}>{event.companyName}</div>
       </div>
       {event.type === 'collect' && (
         <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--orange)', flexShrink: 0 }}>
@@ -261,13 +265,13 @@ function TodoRow({ todo }) {
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
-          fontSize: 14, fontWeight: 600, color: 'var(--text-1)',
+          fontSize: 16, fontWeight: 600, color: 'var(--text-1)',
           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           textDecoration: isDone ? 'line-through' : 'none',
         }}>
           {todo.content}
         </div>
-        <div style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 2 }}>
+        <div style={{ fontSize: 14, color: 'var(--text-3)', marginTop: 2 }}>
           {todo.siteName}
           {todo.dueTime && ` · ${fmtDateTime(todo.dueDate, todo.dueTime).split(' ').slice(1).join(' ')}`}
         </div>

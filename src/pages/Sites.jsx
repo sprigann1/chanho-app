@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
 import SwipeableItem from '../components/SwipeableItem';
+import ThemeToggle from '../components/ThemeToggle';
 import { fmtDate, fmtDateTime } from '../utils/date';
 
 // ─── Status config ────────────────────────────────────────────────────────────
@@ -24,7 +25,7 @@ const STATUS_STYLE = {
 export function StatusBadge({ status, style }) {
   const s = STATUS_STYLE[status] || STATUS_STYLE['대기'];
   return (
-    <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 5, background: s.bg, color: s.color, whiteSpace: 'nowrap', flexShrink: 0, ...style }}>
+    <span style={{ fontSize: 13, fontWeight: 700, padding: '2px 7px', borderRadius: 5, background: s.bg, color: s.color, whiteSpace: 'nowrap', flexShrink: 0, ...style }}>
       {status}
     </span>
   );
@@ -276,19 +277,19 @@ function SiteRow({ site, onTap, showBorder }) {
     >
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 14, fontWeight: 600, color: done ? 'var(--text-3)' : 'var(--text-1)', textDecoration: done ? 'line-through' : 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <span style={{ fontSize: 16, fontWeight: 600, color: done ? 'var(--text-3)' : 'var(--text-1)', textDecoration: done ? 'line-through' : 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {site.siteName}
           </span>
           <StatusBadge status={site.status} />
         </div>
-        <div style={{ fontSize: 12, color: 'var(--text-4)', marginTop: 3 }}>
+        <div style={{ fontSize: 14, color: 'var(--text-4)', marginTop: 3 }}>
           {site.measureDate && `실측 ${fmtDate(site.measureDate)}`}
           {site.measureDate && site.constructDate && ' · '}
           {site.constructDate && `시공 ${fmtDate(site.constructDate)}`}
           {!site.measureDate && !site.constructDate && site.collectDate && `수금예정 ${fmtDate(site.collectDate)}`}
         </div>
       </div>
-      <div style={{ fontSize: 13, fontWeight: 600, color: done ? 'var(--text-4)' : 'var(--text-2)', flexShrink: 0 }}>
+      <div style={{ fontSize: 14, fontWeight: 600, color: done ? 'var(--text-4)' : 'var(--text-2)', flexShrink: 0 }}>
         {formatAmount(site.contractAmount)}원
       </div>
     </div>
@@ -327,12 +328,15 @@ export default function Sites() {
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div className="page-title">현장 관리</div>
-          <button
-            onClick={() => setModal({ type: 'addCompany' })}
-            style={{ fontSize: 13, fontWeight: 600, color: 'var(--primary)', background: 'var(--primary-light)', padding: '6px 12px', borderRadius: 8 }}
-          >
-            + 업체
-          </button>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <ThemeToggle />
+            <button
+              onClick={() => setModal({ type: 'addCompany' })}
+              style={{ fontSize: 13, fontWeight: 600, color: 'var(--primary)', background: 'var(--primary-light)', padding: '6px 12px', borderRadius: 8 }}
+            >
+              + 업체
+            </button>
+          </div>
         </div>
         <div style={{ marginTop: 12 }}>
           <div className="search-box">
@@ -365,7 +369,7 @@ export default function Sites() {
                 {/* Company header */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                   <div>
-                    <span style={{ fontSize: 17, fontWeight: 800, color: '#000' }}>{company.name}</span>
+                    <span style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-1)' }}>{company.name}</span>
                     {company.contact && <span style={{ fontSize: 12, color: 'var(--text-3)', marginLeft: 8 }}>{company.contact} · {company.phone}</span>}
                   </div>
                   <div style={{ display: 'flex', gap: 6 }}>

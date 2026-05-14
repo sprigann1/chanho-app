@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import SwipeableItem from '../components/SwipeableItem';
+import ThemeToggle from '../components/ThemeToggle';
 import { fmtDate, fmtDateTime } from '../utils/date';
 import { isCompletedSite } from './Sites';
 
@@ -152,7 +153,7 @@ export default function Dashboard() {
   });
   const scheduleGroups = scheduleOrder.map(name => ({ name, ...scheduleMap[name] }));
 
-  // 6-stat summary — based on site status field
+  // 6-stat summary
   const statItems = [
     { label: '실측예정', value: sites.filter(s => s.status === '실측예정').length, color: '#3182F6' },
     { label: '실측완료', value: sites.filter(s => s.status === '실측완료').length, color: '#00C073' },
@@ -173,17 +174,21 @@ export default function Dashboard() {
               {today.getFullYear()}년 {MONTHS[today.getMonth()]} {today.getDate()}일 ({WEEKDAYS[today.getDay()]})
             </div>
           </div>
-          <button
-            onClick={loadData}
-            style={{
-              width: 36, height: 36, borderRadius: 10,
-              background: syncStatus === 'ok' ? 'var(--green-light)' : syncStatus === 'error' ? 'var(--red-light)' : 'var(--bg)',
-              color: syncStatus === 'ok' ? 'var(--green)' : syncStatus === 'error' ? 'var(--red)' : 'var(--text-3)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
-            }}
-          >
-            {loading ? '⌛' : '↻'}
-          </button>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <ThemeToggle />
+            <button
+              onClick={loadData}
+              style={{
+                width: 36, height: 36, borderRadius: 10,
+                background: syncStatus === 'ok' ? 'var(--green-light)' : syncStatus === 'error' ? 'var(--red-light)' : 'var(--surface)',
+                color: syncStatus === 'ok' ? 'var(--green)' : syncStatus === 'error' ? 'var(--red)' : 'var(--text-3)',
+                border: '1.5px solid var(--border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
+              }}
+            >
+              {loading ? '⌛' : '↻'}
+            </button>
+          </div>
         </div>
         <div className="sync-bar">
           <div className={`sync-dot ${syncStatus === 'error' ? 'error' : syncStatus === 'loading' ? 'loading' : ''}`} />
@@ -210,7 +215,7 @@ export default function Dashboard() {
               )}
             </div>
             {allTodayEvents.length === 0 ? (
-              <div className="card card-padding" style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-3)', fontSize: 14 }}>
+              <div className="card card-padding" style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-3)', fontSize: 16 }}>
                 오늘 예정된 일정이 없습니다
               </div>
             ) : (
@@ -244,14 +249,14 @@ export default function Dashboard() {
                       onClick={() => navigate('/sites')}
                     >
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: '#000', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {site.companyName}
                         </div>
-                        <div style={{ fontSize: 13, color: 'var(--primary)', marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <div style={{ fontSize: 16, color: 'var(--primary)', marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {site.siteName}
                         </div>
                         {(site.measureDate || site.constructDate) && (
-                          <div style={{ fontSize: 11, color: 'var(--text-4)', marginTop: 2 }}>
+                          <div style={{ fontSize: 14, color: 'var(--text-4)', marginTop: 2 }}>
                             {site.measureDate && `실측 ${fmtDate(site.measureDate)}`}
                             {site.measureDate && site.constructDate && ' · '}
                             {site.constructDate && `시공 ${fmtDate(site.constructDate)}`}
@@ -265,7 +270,7 @@ export default function Dashboard() {
                   </SwipeableItem>
                 ))}
                 {activeSites.length > 5 && (
-                  <div style={{ padding: '10px 16px', textAlign: 'center', fontSize: 13, color: 'var(--primary)', fontWeight: 600 }} onClick={() => navigate('/sites')}>
+                  <div style={{ padding: '10px 16px', textAlign: 'center', fontSize: 14, color: 'var(--primary)', fontWeight: 600 }} onClick={() => navigate('/sites')}>
                     +{activeSites.length - 5}건 더 보기
                   </div>
                 )}
@@ -273,7 +278,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Todos — incomplete only, checked ones disappear */}
+          {/* Todos */}
           <div className="section">
             <div className="section-title">
               할 일
@@ -293,22 +298,22 @@ export default function Dashboard() {
             </div>
 
             {todoGroups.length === 0 ? (
-              <div className="card card-padding" style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-3)', fontSize: 14 }}>
+              <div className="card card-padding" style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-3)', fontSize: 16 }}>
                 미완료 할 일이 없습니다
               </div>
             ) : (
               <div className="card" style={{ overflow: 'hidden' }}>
                 {todoGroups.map((group, gi) => (
                   <div key={group.companyName}>
-                    <div style={{ padding: '10px 16px 6px', fontSize: 17, fontWeight: 800, color: '#000', borderTop: gi > 0 ? '2px solid var(--border)' : 'none' }}>
+                    <div style={{ padding: '10px 16px 6px', fontSize: 18, fontWeight: 800, color: 'var(--text-1)', borderTop: gi > 0 ? '2px solid var(--border)' : 'none' }}>
                       {group.companyName}
                     </div>
                     {group.sites.map(sg => (
                       <div key={sg.siteKey}>
-                        <div style={{ padding: '4px 16px 4px 20px', fontSize: 13, fontWeight: 600, color: 'var(--primary)' }}>
+                        <div style={{ padding: '4px 16px 4px 20px', fontSize: 14, fontWeight: 600, color: 'var(--primary)' }}>
                           {sg.siteName}
                         </div>
-                        {sg.todos.map((todo, tidx) => {
+                        {sg.todos.map((todo) => {
                           const isOverdue = todo.dueDate && todo.dueDate < todayStr;
                           return (
                             <SwipeableItem key={todo.id} onDelete={() => deleteTodo(todo.id)}>
@@ -316,7 +321,7 @@ export default function Dashboard() {
                                 <button
                                   onClick={() => toggleTodo(todo)}
                                   style={{
-                                    width: 20, height: 20, borderRadius: 5, flexShrink: 0,
+                                    width: 22, height: 22, borderRadius: 6, flexShrink: 0,
                                     border: `2px solid var(--border)`,
                                     background: 'transparent',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -324,11 +329,11 @@ export default function Dashboard() {
                                   }}
                                 />
                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                  <div style={{ fontSize: 14, color: 'var(--text-3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                  <div style={{ fontSize: 16, color: 'var(--text-3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                     {todo.content}
                                   </div>
                                   {todo.dueDate && (
-                                    <div style={{ fontSize: 12, marginTop: 2, color: isOverdue ? 'var(--red)' : 'var(--text-4)', fontWeight: isOverdue ? 600 : 400 }}>
+                                    <div style={{ fontSize: 14, marginTop: 2, color: isOverdue ? 'var(--red)' : 'var(--text-4)', fontWeight: isOverdue ? 600 : 400 }}>
                                       {isOverdue && '⚠ '}{fmtDateTime(todo.dueDate, todo.dueTime)}
                                     </div>
                                   )}
@@ -360,8 +365,8 @@ export default function Dashboard() {
                   if (g.todo > 0)      parts.push(`할일 ${g.todo}건`);
                   return (
                     <div key={g.name} style={{ padding: '12px 16px', borderBottom: i < scheduleGroups.length - 1 ? '1px solid var(--border)' : 'none' }}>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-1)', marginBottom: 3 }}>{g.name}</div>
-                      <div style={{ fontSize: 13, color: 'var(--text-3)' }}>{parts.join(' · ')}</div>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-1)', marginBottom: 3 }}>{g.name}</div>
+                      <div style={{ fontSize: 14, color: 'var(--text-3)' }}>{parts.join(' · ')}</div>
                     </div>
                   );
                 })}
@@ -374,11 +379,11 @@ export default function Dashboard() {
             <div className="section-title">전체 현황</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
               {statItems.map(({ label, value, color }) => (
-                <div key={label} style={{ background: 'var(--surface)', borderRadius: 'var(--radius)', padding: '12px 10px', boxShadow: 'var(--shadow-sm)', textAlign: 'center' }}>
-                  <div style={{ fontSize: 11, fontWeight: 600, color, marginBottom: 6 }}>{label}</div>
-                  <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-1)' }}>
+                <div key={label} style={{ background: 'var(--surface)', borderRadius: 'var(--radius)', padding: '14px 10px', boxShadow: 'var(--shadow-sm)', textAlign: 'center' }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color, marginBottom: 6 }}>{label}</div>
+                  <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--text-1)', lineHeight: 1 }}>
                     {value}
-                    <span style={{ fontSize: 11, color: 'var(--text-3)', marginLeft: 2 }}>건</span>
+                    <span style={{ fontSize: 13, color: 'var(--text-3)', marginLeft: 2 }}>건</span>
                   </div>
                 </div>
               ))}
