@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { useData } from '../context/DataContext';
-import ThemeToggle from '../components/ThemeToggle';
 import { fmtDate } from '../utils/date';
 import { StatusBadge, isCompletedSite } from './Sites';
 
@@ -112,7 +111,6 @@ export default function Collections() {
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div className="page-title">수금 현황</div>
-          <ThemeToggle />
         </div>
       </div>
 

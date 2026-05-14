@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
 import SwipeableItem from '../components/SwipeableItem';
-import ThemeToggle from '../components/ThemeToggle';
 import { fmtDateTime } from '../utils/date';
 
 // ─── Add Todo Modal ───────────────────────────────────────────────────────────
@@ -174,9 +173,8 @@ export default function Todos() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div className="page-title">할 일</div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <ThemeToggle />
             <span style={{ fontSize: 14, color: incompleteTodos.length > 0 ? 'var(--purple)' : 'var(--green)', fontWeight: 600 }}>
-              {incompleteTodos.length > 0 ? `${incompleteTodos.length}개 남음` : '모두 완료 🎉'}
+              {incompleteTodos.length > 0 ? `${incompleteTodos.length}개 남음` : '모두 완료'}
             </span>
           </div>
         </div>

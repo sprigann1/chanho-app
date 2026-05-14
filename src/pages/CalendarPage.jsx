@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
-import ThemeToggle from '../components/ThemeToggle';
 import { fmtDateTime } from '../utils/date';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
@@ -97,7 +96,6 @@ export default function CalendarPage() {
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div className="page-title">일정 달력</div>
-          <ThemeToggle />
         </div>
       </div>
 

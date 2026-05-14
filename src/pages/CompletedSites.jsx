@@ -1,6 +1,5 @@
 import React from 'react';
 import { useData } from '../context/DataContext';
-import ThemeToggle from '../components/ThemeToggle';
 
 function formatDate(str) {
   if (!str) return '-';
@@ -39,7 +38,6 @@ export default function CompletedSites() {
             <div className="page-title">완료 현장</div>
             <div style={{ fontSize: 14, color: 'var(--text-3)', marginTop: 2 }}>총 {completedSites.length}건</div>
           </div>
-          <ThemeToggle />
         </div>
       </div>
 

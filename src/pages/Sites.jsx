@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
 import SwipeableItem from '../components/SwipeableItem';
-import ThemeToggle from '../components/ThemeToggle';
 import { fmtDate, fmtDateTime } from '../utils/date';
 
 // ─── Status config ────────────────────────────────────────────────────────────
@@ -329,7 +328,6 @@ export default function Sites() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div className="page-title">현장 관리</div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <ThemeToggle />
             <button
               onClick={() => setModal({ type: 'addCompany' })}
               style={{ fontSize: 13, fontWeight: 600, color: 'var(--primary)', background: 'var(--primary-light)', padding: '6px 12px', borderRadius: 8 }}
