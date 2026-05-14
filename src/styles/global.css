@@ -132,11 +132,12 @@ a {
 /* Layout */
 .app-container {
   width: 100%;
-  min-height: 100dvh;
+  height: 100dvh;
   background: var(--bg);
   position: relative;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .page {
