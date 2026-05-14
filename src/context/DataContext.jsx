@@ -66,19 +66,11 @@ export function DataProvider({ children }) {
         sheetsApi.getTodos(),
       ]);
 
-      // Sites / companies: use GAS data if non-empty, else keep local
-      const newSites     = Array.isArray(s) && s.length > 0 ? s : null;
-      const newCompanies = Array.isArray(c) && c.length > 0 ? c : null;
-      // Todos: if GAS returns empty BUT we have local todos, keep local
-      // (handles newly-deployed sheet or JSONP race with pending addTodo)
-      const gasTodos = Array.isArray(t) ? t : null;
-      const newTodos = gasTodos !== null
-        ? (gasTodos.length > 0 ? gasTodos : (snap.current.todos.length > 0 ? snap.current.todos : []))
-        : null;
-
-      const nextSites     = newSites     ?? snap.current.sites;
-      const nextCompanies = newCompanies ?? snap.current.companies;
-      const nextTodos     = newTodos     ?? snap.current.todos;
+      // GAS is source of truth: use its data even if empty (empty = sheets was cleared)
+      // Only fall back to local when GAS request failed entirely (non-array response)
+      const nextSites     = Array.isArray(s) ? s : snap.current.sites;
+      const nextCompanies = Array.isArray(c) ? c : snap.current.companies;
+      const nextTodos     = Array.isArray(t) ? t : snap.current.todos;
 
       snap.current = { sites: nextSites, companies: nextCompanies, todos: nextTodos };
       setSites(nextSites);
