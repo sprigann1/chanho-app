@@ -4,26 +4,43 @@ import { sheetsApi, MOCK_SITES, MOCK_COMPANIES } from '../api/sheets';
 const DataContext = createContext(null);
 
 const CACHE_KEY = 'chanho_v1';
+const RETRY_KEY = 'chanho_retry_v1';
+
 function readCache() {
   try { return JSON.parse(localStorage.getItem(CACHE_KEY)); } catch { return null; }
 }
 function writeCache(sites, companies, todos) {
   try { localStorage.setItem(CACHE_KEY, JSON.stringify({ sites, companies, todos })); } catch {}
 }
+function readRetryQueue() {
+  try { return JSON.parse(localStorage.getItem(RETRY_KEY)) || []; } catch { return []; }
+}
+function writeRetryQueue(q) {
+  try { localStorage.setItem(RETRY_KEY, JSON.stringify(q)); } catch {}
+}
+
+// For update ops on the same entity: keep only the latest (batching)
+function mergeIntoQueue(queue, item) {
+  if (!item.action.startsWith('update')) return [...queue, item];
+  const filtered = queue.filter(q =>
+    !(q.action === item.action && q.params?.id === item.params?.id)
+  );
+  return [...filtered, item];
+}
 
 export function DataProvider({ children }) {
-  const [sites, setSites]       = useState([]);
-  const [companies, setCompanies] = useState([]);
-  const [todos, setTodos]       = useState([]);
-  const [loading, setLoading]   = useState(false);
+  const [sites, setSites]           = useState([]);
+  const [companies, setCompanies]   = useState([]);
+  const [todos, setTodos]           = useState([]);
+  const [loading, setLoading]       = useState(false);
   const [syncStatus, setSyncStatus] = useState('idle');
-  const [lastSync, setLastSync] = useState(null);
-  const [toast, setToast]       = useState(null);
+  const [lastSync, setLastSync]     = useState(null);
+  const [toast, setToast]           = useState(null);
 
   const toastTimer = useRef(null);
   const syncing    = useRef(false);
-  // Always-current snapshot — safe to read in callbacks without stale closure issues
-  const snap = useRef({ sites: [], companies: [], todos: [] });
+  const retryQueue = useRef(readRetryQueue());
+  const snap       = useRef({ sites: [], companies: [], todos: [] });
 
   const showToast = useCallback((msg) => {
     setToast(msg);
@@ -31,7 +48,6 @@ export function DataProvider({ children }) {
     toastTimer.current = setTimeout(() => setToast(null), 2500);
   }, []);
 
-  // Central helpers that keep snap + state + cache in sync
   const _setSites = useCallback((v) => {
     const next = typeof v === 'function' ? v(snap.current.sites) : v;
     snap.current = { ...snap.current, sites: next };
@@ -53,8 +69,32 @@ export function DataProvider({ children }) {
     writeCache(snap.current.sites, snap.current.companies, snap.current.todos);
   }, []);
 
+  // Fire-and-forget API call; enqueue for retry on failure
+  const dispatch = useCallback((action, params) => {
+    const item = { action, params };
+    sheetsApi[action](params).catch(() => {
+      retryQueue.current = mergeIntoQueue(retryQueue.current, item);
+      writeRetryQueue(retryQueue.current);
+    });
+  }, []);
+
+  // Silently retry all queued operations
+  const flushRetryQueue = useCallback(async () => {
+    if (retryQueue.current.length === 0) return;
+    const queue = [...retryQueue.current];
+    const failed = [];
+    for (const item of queue) {
+      try {
+        await sheetsApi[item.action](item.params);
+      } catch {
+        failed.push(item);
+      }
+    }
+    retryQueue.current = failed;
+    writeRetryQueue(failed);
+  }, []);
+
   const runSync = useCallback(async (showSpinner = false) => {
-    // Manual refresh (showSpinner) always runs; background skips if already syncing
     if (!showSpinner && syncing.current) return;
     syncing.current = true;
     if (showSpinner) setLoading(true);
@@ -66,8 +106,8 @@ export function DataProvider({ children }) {
         sheetsApi.getTodos(),
       ]);
 
-      // GAS is source of truth: use its data even if empty (empty = sheets was cleared)
-      // Only fall back to local when GAS request failed entirely (non-array response)
+      // GAS is source of truth: empty array means sheets was cleared
+      // Fall back to local only when GAS request failed entirely (non-array)
       const nextSites     = Array.isArray(s) ? s : snap.current.sites;
       const nextCompanies = Array.isArray(c) ? c : snap.current.companies;
       const nextTodos     = Array.isArray(t) ? t : snap.current.todos;
@@ -87,7 +127,7 @@ export function DataProvider({ children }) {
     }
   }, []);
 
-  // On mount: load cache instantly → background sync
+  // On mount: load cache instantly → background sync + flush retry queue
   useEffect(() => {
     const cache = readCache();
     const hasCache = !!(cache?.sites?.length);
@@ -106,78 +146,85 @@ export function DataProvider({ children }) {
       setCompanies(MOCK_COMPANIES);
     }
     runSync(!hasCache);
-  }, [runSync]);
+    flushRetryQueue();
+  }, [runSync, flushRetryQueue]);
+
+  // Retry failed operations every 30s
+  useEffect(() => {
+    const id = setInterval(flushRetryQueue, 30_000);
+    return () => clearInterval(id);
+  }, [flushRetryQueue]);
 
   const loadData = useCallback(() => runSync(true), [runSync]);
 
   // ─── Sites CRUD ──────────────────────────────────────────────────────────────
-  const addSite = useCallback(async (data) => {
+  const addSite = useCallback((data) => {
     const newSite = { ...data, id: `s${Date.now()}` };
     _setSites(prev => [newSite, ...prev]);
     showToast('현장이 추가되었습니다');
-    try { await sheetsApi.addSite(data); } catch {}
-  }, [_setSites, showToast]);
+    dispatch('addSite', data);
+  }, [_setSites, showToast, dispatch]);
 
-  const updateSite = useCallback(async (data) => {
+  const updateSite = useCallback((data) => {
     _setSites(prev => prev.map(s => s.id === data.id ? data : s));
     showToast('현장 정보가 수정되었습니다');
-    try { await sheetsApi.updateSite(data); } catch {}
-  }, [_setSites, showToast]);
+    dispatch('updateSite', data);
+  }, [_setSites, showToast, dispatch]);
 
-  const deleteSite = useCallback(async (id) => {
+  const deleteSite = useCallback((id) => {
     _setSites(prev => prev.filter(s => s.id !== id));
     _setTodos(prev => prev.filter(t => t.siteId !== id));
     showToast('현장이 삭제되었습니다');
-    try { await sheetsApi.deleteSite(id); } catch {}
-  }, [_setSites, _setTodos, showToast]);
+    dispatch('deleteSite', id);
+  }, [_setSites, _setTodos, showToast, dispatch]);
 
   // ─── Companies CRUD ───────────────────────────────────────────────────────────
-  const addCompany = useCallback(async (data) => {
+  const addCompany = useCallback((data) => {
     const newCompany = { ...data, id: `c${Date.now()}` };
     _setCompanies(prev => [newCompany, ...prev]);
     showToast('업체가 추가되었습니다');
-    try { await sheetsApi.addCompany(data); } catch {}
-  }, [_setCompanies, showToast]);
+    dispatch('addCompany', data);
+  }, [_setCompanies, showToast, dispatch]);
 
-  const updateCompany = useCallback(async (data) => {
+  const updateCompany = useCallback((data) => {
     _setCompanies(prev => prev.map(c => c.id === data.id ? data : c));
     showToast('업체 정보가 수정되었습니다');
-    try { await sheetsApi.updateCompany(data); } catch {}
-  }, [_setCompanies, showToast]);
+    dispatch('updateCompany', data);
+  }, [_setCompanies, showToast, dispatch]);
 
-  const deleteCompany = useCallback(async (id) => {
+  const deleteCompany = useCallback((id) => {
     const co = snap.current.companies.find(c => c.id === id);
     _setCompanies(prev => prev.filter(c => c.id !== id));
     if (co) _setSites(prev => prev.filter(s => s.companyName !== co.name));
     showToast('업체가 삭제되었습니다');
-    try { await sheetsApi.deleteCompany(id); } catch {}
-  }, [_setCompanies, _setSites, showToast]);
+    dispatch('deleteCompany', id);
+  }, [_setCompanies, _setSites, showToast, dispatch]);
 
   // ─── Todos CRUD ───────────────────────────────────────────────────────────────
-  const addTodo = useCallback(async (data) => {
+  const addTodo = useCallback((data) => {
     const newTodo = { ...data, id: `t${Date.now()}`, completed: 'false' };
     _setTodos(prev => [...prev, newTodo]);
     showToast('할 일이 추가되었습니다');
-    try { await sheetsApi.addTodo(newTodo); } catch {}
-  }, [_setTodos, showToast]);
+    dispatch('addTodo', newTodo);
+  }, [_setTodos, showToast, dispatch]);
 
-  const toggleTodo = useCallback(async (todo) => {
+  const toggleTodo = useCallback((todo) => {
     const updated = { ...todo, completed: todo.completed === 'true' ? 'false' : 'true' };
     _setTodos(prev => prev.map(t => t.id === todo.id ? updated : t));
-    try { await sheetsApi.updateTodo(updated); } catch {}
-  }, [_setTodos]);
+    dispatch('updateTodo', updated);
+  }, [_setTodos, dispatch]);
 
-  const editTodo = useCallback(async (data) => {
+  const editTodo = useCallback((data) => {
     _setTodos(prev => prev.map(t => t.id === data.id ? { ...t, ...data } : t));
     showToast('할 일이 수정되었습니다');
-    try { await sheetsApi.updateTodo(data); } catch {}
-  }, [_setTodos, showToast]);
+    dispatch('updateTodo', data);
+  }, [_setTodos, showToast, dispatch]);
 
-  const deleteTodo = useCallback(async (id) => {
+  const deleteTodo = useCallback((id) => {
     _setTodos(prev => prev.filter(t => t.id !== id));
     showToast('할 일이 삭제되었습니다');
-    try { await sheetsApi.deleteTodo(id); } catch {}
-  }, [_setTodos, showToast]);
+    dispatch('deleteTodo', id);
+  }, [_setTodos, showToast, dispatch]);
 
   return (
     <DataContext.Provider value={{

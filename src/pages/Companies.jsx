@@ -438,31 +438,25 @@ export default function Companies() {
 
   const closeModal = () => setModal(null);
 
-  const handleSaveCompany = async (form) => {
-    if (modal.company) {
-      await updateCompany({ ...form, id: modal.company.id });
-    } else {
-      await addCompany(form);
-    }
+  const handleSaveCompany = (form) => {
+    if (modal.company) updateCompany({ ...form, id: modal.company.id });
+    else addCompany(form);
     closeModal();
   };
 
-  const handleSaveSite = async (form) => {
-    if (modal.site) {
-      await updateSite({ ...form, id: modal.site.id });
-    } else {
-      await addSite(form);
-    }
+  const handleSaveSite = (form) => {
+    if (modal.site) updateSite({ ...form, id: modal.site.id });
+    else addSite(form);
     closeModal();
   };
 
-  const handleDeleteSite = async (id) => {
-    await deleteSite(id);
+  const handleDeleteSite = (id) => {
+    deleteSite(id);
     closeModal();
   };
 
-  const handleDeleteCompany = async (id) => {
-    await deleteCompany(id);
+  const handleDeleteCompany = (id) => {
+    deleteCompany(id);
     closeModal();
   };
 

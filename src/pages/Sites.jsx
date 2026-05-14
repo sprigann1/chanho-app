@@ -304,15 +304,15 @@ export default function Sites() {
 
   const closeModal = () => setModal(null);
 
-  const handleSaveCompany = async (form) => {
-    if (modal?.company) await updateCompany({ ...form, id: modal.company.id });
-    else await addCompany(form);
+  const handleSaveCompany = (form) => {
+    if (modal?.company) updateCompany({ ...form, id: modal.company.id });
+    else addCompany(form);
     closeModal();
   };
 
-  const handleSaveSite = async (form) => {
-    if (modal?.site) await updateSite({ ...form, id: modal.site.id });
-    else await addSite(form);
+  const handleSaveSite = (form) => {
+    if (modal?.site) updateSite({ ...form, id: modal.site.id });
+    else addSite(form);
     closeModal();
   };
 
@@ -432,7 +432,7 @@ export default function Sites() {
       {modal?.type === 'addCompany' && <CompanyModal onClose={closeModal} onSave={handleSaveCompany} />}
       {modal?.type === 'editCompany' && <CompanyModal company={modal.company} onClose={closeModal} onSave={handleSaveCompany} />}
       {modal?.type === 'deleteCompany' && (
-        <DeleteConfirmModal text={`'${modal.company.name}' 업체와 관련 현장이 모두 삭제됩니다`} onClose={closeModal} onConfirm={async () => { await deleteCompany(modal.company.id); closeModal(); }} />
+        <DeleteConfirmModal text={`'${modal.company.name}' 업체와 관련 현장이 모두 삭제됩니다`} onClose={closeModal} onConfirm={() => { deleteCompany(modal.company.id); closeModal(); }} />
       )}
       {modal?.type === 'addSite' && (
         <SiteModal companies={companies} defaultCompany={modal.company?.name} onClose={closeModal} onSave={handleSaveSite} />
@@ -441,7 +441,7 @@ export default function Sites() {
         <SiteModal site={modal.site} companies={companies} onClose={closeModal} onSave={handleSaveSite} />
       )}
       {modal?.type === 'deleteSite' && (
-        <DeleteConfirmModal text={`'${modal.site.siteName}' 현장이 삭제됩니다`} onClose={closeModal} onConfirm={async () => { await deleteSite(modal.site.id); closeModal(); }} />
+        <DeleteConfirmModal text={`'${modal.site.siteName}' 현장이 삭제됩니다`} onClose={closeModal} onConfirm={() => { deleteSite(modal.site.id); closeModal(); }} />
       )}
     </div>
   );
