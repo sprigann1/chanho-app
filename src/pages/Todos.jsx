@@ -178,7 +178,7 @@ export default function Todos() {
         </div>
       </div>
 
-      <div style={{ padding: '0 20px' }}>
+      <div style={{ padding: '0 16px' }}>
         {incompleteTodos.length === 0 && completedTodos.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">✅</div>

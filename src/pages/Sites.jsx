@@ -342,7 +342,7 @@ export default function Sites() {
         </div>
       </div>
 
-      <div style={{ padding: '0 20px' }}>
+      <div style={{ padding: '0 16px' }}>
         {visibleCompanies.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">🏗</div>

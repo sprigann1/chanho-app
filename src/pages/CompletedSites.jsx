@@ -45,7 +45,7 @@ export default function CompletedSites() {
           <div className="empty-text">완료된 현장이 없습니다</div>
         </div>
       ) : (
-        <div style={{ padding: '0 20px' }}>
+        <div style={{ padding: '0 16px' }}>
           {grouped.map((group, gi) => (
             <div key={group.id} style={{ marginBottom: 20 }}>
               <div style={{

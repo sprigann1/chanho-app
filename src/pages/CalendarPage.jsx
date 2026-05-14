@@ -163,7 +163,7 @@ export default function CalendarPage() {
           </div>
 
           {totalSelected === 0 ? (
-            <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-3)', fontSize: 13 }}>
+            <div style={{ padding: '16px', textAlign: 'center', color: 'var(--text-3)', fontSize: 13 }}>
               이 날 일정이 없습니다
             </div>
           ) : (
@@ -180,7 +180,7 @@ export default function CalendarPage() {
       )}
 
       {/* Monthly summary */}
-      <div style={{ padding: '16px 20px 0' }}>
+      <div style={{ padding: '16px 16px 0' }}>
         <div className="section-title">이번 달 현황</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 8 }}>
           {[

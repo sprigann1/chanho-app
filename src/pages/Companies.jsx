@@ -476,7 +476,7 @@ export default function Companies() {
         </div>
       </div>
 
-      <div style={{ padding: '0 20px' }}>
+      <div style={{ padding: '0 16px' }}>
         {filteredCompanies.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">🏢</div>

@@ -210,7 +210,7 @@ export default function Dashboard() {
               )}
             </div>
             {allTodayEvents.length === 0 ? (
-              <div className="card card-padding" style={{ textAlign: 'center', color: 'var(--text-3)', fontSize: 14 }}>
+              <div className="card card-padding" style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-3)', fontSize: 14 }}>
                 오늘 예정된 일정이 없습니다
               </div>
             ) : (
@@ -293,7 +293,7 @@ export default function Dashboard() {
             </div>
 
             {todoGroups.length === 0 ? (
-              <div className="card card-padding" style={{ textAlign: 'center', color: 'var(--text-3)', fontSize: 14 }}>
+              <div className="card card-padding" style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-3)', fontSize: 14 }}>
                 미완료 할 일이 없습니다
               </div>
             ) : (

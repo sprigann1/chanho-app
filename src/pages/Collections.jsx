@@ -149,7 +149,7 @@ export default function Collections() {
       </div>
 
       {/* View toggle */}
-      <div style={{ padding: '0 20px', marginBottom: 16 }}>
+      <div style={{ padding: '0 16px', marginBottom: 16 }}>
         <div style={{ display: 'flex', background: 'var(--bg)', borderRadius: 'var(--radius)', padding: 4, gap: 4 }}>
           {['company', 'site'].map(v => (
             <button
@@ -172,7 +172,7 @@ export default function Collections() {
 
       {/* Company view */}
       {view === 'company' && (
-        <div style={{ padding: '0 20px' }}>
+        <div style={{ padding: '0 16px' }}>
           {companyStats.length === 0 ? (
             <div className="empty-state"><div className="empty-icon">📊</div><div className="empty-text">등록된 업체가 없습니다</div></div>
           ) : companyStats.map(c => (
@@ -198,7 +198,7 @@ export default function Collections() {
 
       {/* Site view */}
       {view === 'site' && (
-        <div style={{ padding: '0 20px' }}>
+        <div style={{ padding: '0 16px' }}>
           {sitesWithStats.length === 0 ? (
             <div className="empty-state"><div className="empty-icon">🏗</div><div className="empty-text">등록된 현장이 없습니다</div></div>
           ) : sitesWithStats.map(s => (
